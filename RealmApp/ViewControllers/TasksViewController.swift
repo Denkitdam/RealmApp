@@ -63,7 +63,6 @@ final class TasksViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let currentTask = currentTasks[indexPath.row]
-        let completedTask = completedTasks[indexPath.row]
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, _ in
             storageManager.remove(currentTask)
@@ -74,9 +73,6 @@ final class TasksViewController: UITableViewController {
             showAlert(with: currentTask) {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
-            showAlert(with: completedTask) {
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
             isDone(true)
             
         }
@@ -85,6 +81,10 @@ final class TasksViewController: UITableViewController {
             tableView.reloadRows(at: [indexPath], with: .automatic)
             isDone(true)
         }
+        
+        editAction.backgroundColor = .orange
+        doneAction.backgroundColor = .green
+        
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction, doneAction])
         
     }
@@ -106,7 +106,8 @@ extension TasksViewController {
                 style: .default
             ) { [weak self] taskTitle, taskNote in
                 if let task, let completion {
-                    // TODO: - edit task
+                    self?.storageManager.edit(task: task, newTitle: taskTitle, newNote: taskNote)
+                    completion()
                     return
                 }
                 self?.save(task: taskTitle, withNote: taskNote)
