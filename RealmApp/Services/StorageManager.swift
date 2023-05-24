@@ -80,7 +80,11 @@ final class StorageManager {
             task.isComplete = true
         }
     }
-    
+    func restore(_ task: Task) {
+        write {
+            task.isComplete = false
+        }
+    }
     private func write(completion: () -> Void) {
         do {
             try realm.write {

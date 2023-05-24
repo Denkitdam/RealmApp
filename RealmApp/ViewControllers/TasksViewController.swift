@@ -81,12 +81,21 @@ final class TasksViewController: UITableViewController {
             tableView.reloadData()
             isDone(true)
         }
+        let restoreAction = UIContextualAction(style: .normal, title: "Restore") { [unowned self] _, _, isDone in
+            storageManager.restore(currentTask)
+            tableView.reloadData()
+            isDone(true)
+        }
         
         editAction.backgroundColor = .orange
         doneAction.backgroundColor = .green
+        restoreAction.backgroundColor = .green
         
-        return UISwipeActionsConfiguration(actions: [deleteAction, editAction, doneAction])
-        
+        var actionsOrder =  UISwipeActionsConfiguration(actions: [deleteAction, editAction, doneAction])
+         if currentTask.isComplete {
+            actionsOrder = UISwipeActionsConfiguration(actions: [deleteAction, editAction, restoreAction])
+        }
+        return actionsOrder
     }
 }
 
