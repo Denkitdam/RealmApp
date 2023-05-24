@@ -45,7 +45,11 @@ final class TaskListViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         let taskList = taskLists[indexPath.row]
         content.text = taskList.title
-        content.secondaryText = taskList.tasks.count.formatted()
+        if taskList.tasks.isEmpty {
+            content.secondaryText = "✔︎"
+        } else {
+            content.secondaryText = taskList.tasks.count.formatted()
+        }
         cell.contentConfiguration = content
         return cell
     }
